@@ -40,9 +40,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - ./airflow_dags:/opt/airflow/dags
+      - ./airflow_logs:/opt/airflow/logs
+      - ./airflow_plugins:/opt/airflow/plugins
     entrypoint: 
       - /bin/bash
       - -c
@@ -53,7 +53,7 @@ services:
                             --lastname User \
                             --role Admin \
                             --email admin@example.com \
-                            --password #Suc3ss0! &&
+                            --password Suc3ss0! &&
         exec airflow webserver
     networks:
       - kraken
@@ -71,9 +71,9 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
     command: scheduler
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - ./airflow_dags:/opt/airflow/dags
+      - ./airflow_logs:/opt/airflow/logs
+      - ./airflow_plugins:/opt/airflow/plugins
     networks:
       - kraken
 
@@ -90,9 +90,9 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
     command: celery worker
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - ./airflow_dags:/opt/airflow/dags
+      - ./airflow_logs:/opt/airflow/logs
+      - ./airflow_plugins:/opt/airflow/plugins
     networks:
       - kraken
 
@@ -109,9 +109,9 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
     command: db init
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
+      - ./airflow_dags:/opt/airflow/dags
+      - ./airflow_logs:/opt/airflow/logs
+      - ./airflow_plugins:/opt/airflow/plugins
     networks:
       - kraken
 
@@ -120,7 +120,7 @@ services:
     container_name: mysql_rdbms
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: #Suc3ss0!
+      MYSQL_ROOT_PASSWORD: Suc3ss0!
     ports:
       - "3306:3306"
     volumes:
@@ -148,7 +148,7 @@ services:
       - "9090:9090"
     environment:
       MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin123
+      MINIO_ROOT_PASSWORD: Suc3ss0!
     volumes:
       - minio_data:/data
     networks:
@@ -198,9 +198,9 @@ networks:
     driver: bridge
 
 volumes:
-  dags:
-  logs:
-  plugins:
+  airflow_dags:
+  airflow_logs:
+  airflow_plugins:
   postgres_data:
   redis_data:
   mysql_data:
