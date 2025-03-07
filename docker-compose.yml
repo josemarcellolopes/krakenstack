@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - sicooperative
+      - kraken
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -21,9 +21,9 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - sicooperative
+      - kraken
     volumes:
-      - redis_data:/data  # Adicionando persistência ao Redis
+      - redis_data:/data
 
   airflow-webserver:
     image: apache/airflow:2.9.2
@@ -53,11 +53,10 @@ services:
                             --lastname User \
                             --role Admin \
                             --email admin@example.com \
-                            --password admin &&
-        airflow variables set output '/opt/airflow/dags/output' && 
+                            --password #Suc3ss0! &&
         exec airflow webserver
     networks:
-      - sicooperative
+      - kraken
 
   airflow-scheduler:
     image: apache/airflow:2.9.2
@@ -76,7 +75,7 @@ services:
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
     networks:
-      - sicooperative
+      - kraken
 
   airflow-worker:
     image: apache/airflow:2.9.2
@@ -95,7 +94,7 @@ services:
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
     networks:
-      - sicooperative
+      - kraken
 
   airflow-init:
     image: apache/airflow:2.9.2
@@ -114,23 +113,20 @@ services:
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
     networks:
-      - sicooperative
+      - kraken
 
   mysql-rdbms:
     image: mysql:latest
     container_name: mysql_rdbms
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: sicooperative
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: #Suc3ss0!
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - sicooperative
+      - kraken
 
   briefer-cloud:
     image: briefercloud/briefer
@@ -142,10 +138,63 @@ services:
       - briefer_jupyter:/home/jupyteruser
       - briefer_home:/home/briefer
     networks:
-      - sicooperative
+      - kraken
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_storage
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    volumes:
+      - minio_data:/data
+    networks:
+      - kraken
+    command: server --console-address ":9090" /data
+
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark_master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+    ports:
+      - "7077:7077"  # Porta do Spark Master
+      - "8081:8080"  # Interface Web do Spark Master
+    networks:
+      - kraken
+
+  spark-worker:
+    image: bitnami/spark:latest
+    container_name: spark_worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    networks:
+      - kraken
+
+  jupyter:
+    image: jupyter/pyspark-notebook
+    container_name: jupyter_notebook
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    depends_on:
+      - spark-master
+      - spark-worker
+    networks:
+      - kraken
 
 networks:
-  sicooperative:
+  kraken:
     driver: bridge
 
 volumes:
@@ -158,3 +207,4 @@ volumes:
   briefer_data:
   briefer_jupyter:
   briefer_home:
+  minio_data:
