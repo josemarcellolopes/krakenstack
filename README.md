@@ -91,9 +91,7 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
 
 ## Pré-requisitos
 
-- Docker e Docker Compose instalados
-
-Baixar em https://www.docker.com/
+- Docker e Docker Compose instalados (caso não tenha baixar em https://www.docker.com/)
  
 ## Como Usar
 
