@@ -1,3 +1,3 @@
 # Kraken Stack
 
-![Tela](images/Kraken Stack.png)
+![Tela](images/Kraken_Stack.png)
