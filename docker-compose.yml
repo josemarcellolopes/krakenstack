@@ -1,5 +1,5 @@
 services:
-  postgres:
+  airflow-postgres:
     image: postgres:15
     container_name: airflow_postgres
     restart: always
@@ -14,7 +14,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  redis:
+  airflow-redis:
     image: redis:7
     container_name: airflow_redis
     restart: always
@@ -30,13 +30,13 @@ services:
     container_name: airflow_webserver
     restart: always
     depends_on:
-      - postgres
-      - redis
+      - airflow-postgres
+      - airflow-redis
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
     ports:
       - "8080:8080"
     volumes:
@@ -66,9 +66,9 @@ services:
       - airflow-webserver
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
     command: scheduler
     volumes:
       - ./airflow_dags:/opt/airflow/dags
@@ -85,9 +85,9 @@ services:
       - airflow-webserver
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
     command: celery worker
     volumes:
       - ./airflow_dags:/opt/airflow/dags
@@ -100,13 +100,13 @@ services:
     image: apache/airflow:2.9.2
     container_name: airflow_init
     depends_on:
-      - postgres
-      - redis
+      - airflow-postgres
+      - airflow-redis
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
     command: db init
     volumes:
       - ./airflow_dags:/opt/airflow/dags
@@ -140,9 +140,9 @@ services:
     networks:
       - kraken
 
-  minio:
+  storage-minio:
     image: minio/minio:latest
-    container_name: minio_storage
+    container_name: storage_minio
     ports:
       - "9000:9000"
       - "9090:9090"
@@ -162,8 +162,8 @@ services:
       - SPARK_MODE=master
       - SPARK_MASTER_HOST=spark-master
     ports:
-      - "7077:7077"  # Porta do Spark Master
-      - "8081:8080"  # Interface Web do Spark Master
+      - "7077:7077"
+      - "8081:8080"
     networks:
       - kraken
 
@@ -178,7 +178,7 @@ services:
     networks:
       - kraken
 
-  jupyter:
+  spark-jupyter:
     image: jupyter/pyspark-notebook
     container_name: jupyter_notebook
     environment:
@@ -190,6 +190,40 @@ services:
     depends_on:
       - spark-master
       - spark-worker
+    networks:
+      - kraken
+
+  flow-n8n:
+    image: n8nio/n8n
+    container_name: flow_n8n
+    restart: unless-stopped
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=yourpassword
+      - N8N_HOST=n8n.local
+      - N8N_PORT=5678
+      - WEBHOOK_TUNNEL_URL=https://yourdomain.com
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    ports:
+      - "5678:5678"
+    volumes:
+      - flow_n8n_data:/home/node/.n8n
+    depends_on:
+      - flow-postgres
+    networks:
+      - kraken
+
+  flow-postgres:
+    image: postgres:14
+    container_name: flow_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=n8npassword
+      - POSTGRES_DB=n8n
+    volumes:
+      - flow_postgres_data:/var/lib/postgresql/data
     networks:
       - kraken
 
@@ -208,3 +242,5 @@ volumes:
   briefer_jupyter:
   briefer_home:
   minio_data:
+  flow_n8n_data:
+  flow_postgres_data:
