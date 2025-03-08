@@ -60,7 +60,7 @@ Esta sendo desenvolvido a adição de mais tecnologias, são as seguintes:
 
 As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-compose.yml`:
 
-**Briefer**
+- **Briefer**
   - Usuário: `a sua escolha`
   - Senha: `a sua escolha`
 
@@ -81,7 +81,7 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
   - Usuário: `admin`
   - Senha: `Suc3ss0!`
 
-**n8n**
+- **n8n**
   - Usuário: `a sua escolha`
   - Senha: `a sua escolha`
 
@@ -92,20 +92,23 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
 ## Pré-requisitos
 
 - Docker e Docker Compose instalados
-- Bash Shell (para executar os scripts `.sh`)
-- Python (se utilizar os notebooks)
 
+Baixar em https://www.docker.com/
+ 
 ## Como Usar
 
-### Inicialização
+Clone o repositório do GitHub
 
-Para iniciar a aplicação:
+git clone https://github.com/josemarcellolopes/krakenstack.git
+cd kraken
+
+### Para inicializar a stack
 
 ```sh
 ./run.sh
 ```
 
-### Parar a aplicação
+### Parar a stack
 
 ```sh
 ./stop.sh
