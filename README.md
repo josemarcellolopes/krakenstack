@@ -4,6 +4,10 @@
 
 O **Kraken Stack** é uma solução para desenvolvimento e gerenciamento de pipelines de dados, baseada em Docker. **Este ambiente integra diversas tecnologias** voltadas para a orquestração, processamento, armazenamento e automação de fluxos de trabalho, permitindo uma infraestrutura flexível e escalável para projetos de ciência de dados, engenharia de dados e análise de informações.
 
+## Qual a idéia do nome Kraken Stack
+
+No contexto do projeto, o Kraken representa uma solução robusta e integrada para o desenvolvimento e gerenciamento de pipelines de dados. O nome foi inspirado na criatura mitológica Kraken, um monstro marinho gigante frequentemente associado a força, poder e controle sobre vastos territórios, como a solução usa Docker que é representado por uma baleia e seus containers por simbolos ligados ao mar, dai surgiu o nome.
+
 ## Estrutura do Projeto
 
 ```
