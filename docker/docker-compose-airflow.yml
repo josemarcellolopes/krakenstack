@@ -1,0 +1,132 @@
+services:
+  airflow-postgres:
+    image: postgres:15
+    container_name: airflow_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    networks:
+      - kraken
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-redis:
+    image: redis:7
+    container_name: airflow_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - kraken
+    volumes:
+      - redis_data:/data
+
+  airflow-webserver:
+    image: apache/airflow:2.9.2
+    container_name: airflow_webserver
+    restart: always
+    depends_on:
+      - airflow-postgres
+      - airflow-redis
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+    entrypoint: 
+      - /bin/bash
+      - -c
+      - |
+        airflow db migrate &&
+        airflow users create --username admin \
+                            --firstname Admin \
+                            --lastname User \
+                            --role Admin \
+                            --email admin@example.com \
+                            --password Suc3ss0! &&
+        exec airflow webserver
+    networks:
+      - kraken
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.2
+    container_name: airflow_scheduler
+    restart: always
+    depends_on:
+      - airflow-webserver
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
+    command: scheduler
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+    entrypoint: 
+      - /bin/bash
+      - -c
+      - |
+        exec airflow scheduler
+    networks:
+      - kraken
+
+  airflow-worker:
+    image: apache/airflow:2.9.2
+    container_name: airflow_worker
+    restart: always
+    depends_on:
+      - airflow-webserver
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
+    command: celery worker
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - kraken
+
+  airflow-init:
+    image: apache/airflow:2.9.2
+    container_name: airflow_init
+    depends_on:
+      - airflow-postgres
+      - airflow-redis
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow_postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow_postgres/airflow
+    command: db init
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - kraken
+
+networks:
+  kraken:
+    driver: bridge
+
+volumes:
+  airflow_dags:
+  airflow_logs:
+  airflow_plugins:
+  postgres_data:
+  redis_data:

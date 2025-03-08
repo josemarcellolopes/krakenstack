@@ -1,0 +1,43 @@
+services:
+
+  flow-n8n:
+    image: n8nio/n8n
+    container_name: flow_n8n
+    restart: unless-stopped
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=yourpassword
+      - N8N_HOST=n8n.local
+      - N8N_PORT=5678
+      - WEBHOOK_TUNNEL_URL=https://yourdomain.com
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    ports:
+      - "5678:5678"
+    volumes:
+      - flow_n8n_data:/home/node/.n8n
+    depends_on:
+      - flow-postgres
+    networks:
+      - kraken
+
+  flow-postgres:
+    image: postgres:14
+    container_name: flow_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=n8npassword
+      - POSTGRES_DB=n8n
+    volumes:
+      - flow_postgres_data:/var/lib/postgresql/data
+    networks:
+      - kraken
+
+networks:
+  kraken:
+    driver: bridge
+
+volumes:
+  flow_n8n_data:
+  flow_postgres_data:

@@ -1,0 +1,22 @@
+services:
+
+  briefer-cloud:
+    image: briefercloud/briefer
+    container_name: briefer_cloud
+    ports:
+      - "3000:3000"
+    volumes:
+      - briefer_data:/var/lib/postgresql/data
+      - briefer_jupyter:/home/jupyteruser
+      - briefer_home:/home/briefer
+    networks:
+      - kraken
+
+networks:
+  kraken:
+    driver: bridge
+
+volumes:
+  briefer_data:
+  briefer_jupyter:
+  briefer_home:

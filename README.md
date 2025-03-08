@@ -1,4 +1,4 @@
-# Kraken Stack
+# Kraken Stack v1
 
 ![Tela](images/Kraken_Stack.png)
 
@@ -6,13 +6,19 @@ O **Kraken Stack** é uma solução para desenvolvimento e gerenciamento de pipe
 
 ## Qual a idéia do nome Kraken Stack
 
-No contexto do projeto, o Kraken representa uma solução robusta e integrada para o desenvolvimento e gerenciamento de pipelines de dados. O nome foi inspirado na criatura mitológica Kraken, um monstro marinho gigante frequentemente associado a força, poder e controle sobre vastos territórios, como a solução usa Docker que é representado por uma baleia e seus containers por simbolos ligados ao mar, dai surgiu o nome.
+No contexto do projeto, o Kraken representa uma solução robusta e integrada para o desenvolvimento e gerenciamento de pipelines de dados. O nome foi inspirado na **criatura mitológica Kraken, um monstro marinho gigante frequentemente associado a força, poder e controle sobre vastos territórios**, como a solução usa Docker que é representado por uma baleia e seus containers por simbolos ligados ao mar, dai surgiu o nome.
 
 ## Estrutura do Projeto
 
 ```
 kraken/
 ├── docker/            # Configurações e arquivos relacionados ao Docker
+├── airflow/           # Pasta do Airflow
+    ├── dags/          # Contém as Dags do Airflow
+    ├── logs/          # Contém os logs do Airflow
+    ├── plugins/       # Contém os plugins do Airflow
+├── spark/             # Pasta do Spark
+    ├── notebooks/     # Contém os notebooks
 ├── images/            # Armazena imagens do projeto
 ├── notebooks/         # Jupyter Notebooks
 ├── menu.sh            # Script de menu interativo
@@ -26,28 +32,46 @@ kraken/
 
 O Kraken Stack utiliza as seguintes tecnologias para a execução dos serviços:
 
-- **PostgreSQL** - Banco de dados relacional para Airflow e n8n
-- **Redis** - Backend de mensagens para Airflow
+- **Briefer Cloud** - Análise de dados, relatórios e notebooks
 - **Apache Airflow** - Orquestração de workflows
+- **PostgreSQL** - Banco de dados relacional
+- **Redis** - Backend de mensagens para Airflow
 - **MySQL** - Banco de dados relacional
-- **Briefer Cloud** - Análise de dados e relatórios
-- **MinIO** - Armazenamento de objetos compatível com S3
 - **Apache Spark** - Processamento distribuído de dados
 - **Jupyter Notebook** - Ambiente interativo para análise de dados
+- **Delta Lake** - Armazenamento com capacidade ACID
+- **MinIO** - Armazenamento de objetos compatível com S3
 - **n8n** - Automatização de fluxos de trabalho
+
+Esta sendo desenvolvido a adição de mais tecnologias, são as seguintes:
+
+- **Postgres**
+- **Oracle**
+- **SQL Server**
+- **Sybase**
+- **DB2**
+- **Informix**
+- **Teradata**
+- **Cassandra**
+- **MongoDB**
+- **Soluções de IA Generativa**
 
 ## Credenciais Padrão
 
 As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-compose.yml`:
 
+**Briefer**
+  - Usuário: `a sua escolha`
+  - Senha: `a sua escolha`
+
+- **Airflow Webserver**
+  - Usuário: `admin`
+  - Senha: `Suc3ss0!`
+
 - **PostgreSQL (Airflow)**
   - Usuário: `airflow`
   - Senha: `airflow`
   - Banco de Dados: `airflow`
-
-- **PostgreSQL (n8n)**
-  - Usuário: `n8n`
-  - Senha: `n8npassword`
 
 - **MySQL**
   - Usuário root: `root`
@@ -57,13 +81,13 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
   - Usuário: `admin`
   - Senha: `Suc3ss0!`
 
-- **Airflow Webserver**
-  - Usuário: `admin`
-  - Senha: `Suc3ss0!`
+**n8n**
+  - Usuário: `a sua escolha`
+  - Senha: `a sua escolha`
 
-- **n8n**
-  - Usuário: `admin`
-  - Senha: `yourpassword`
+- **PostgreSQL (n8n)**
+  - Usuário: `n8n`
+  - Senha: `n8npassword`
 
 ## Pré-requisitos
 
@@ -87,16 +111,6 @@ Para iniciar a aplicação:
 ./stop.sh
 ```
 
-### Executar o menu interativo
-
-```sh
-./menu.sh
-```
-
-## Notebooks
-
-Os notebooks Jupyter podem ser encontrados na pasta `notebooks/`. Certifique-se de que o ambiente Python necessário está configurado antes de executá-los.
-
 ## Docker
 
 A pasta `docker/` contém arquivos de configuração para execução do projeto dentro de containers Docker. Certifique-se de que o Docker está instalado e rodando.
@@ -105,10 +119,20 @@ A pasta `docker/` contém arquivos de configuração para execução do projeto 
 
 O Kraken Stack contém diversos serviços, que podem ser acessados nas seguintes portas padrão:
 
+- **Briefer Cloud**: `http://localhost:3000`
 - **Apache Airflow**: `http://localhost:8080`
 - **MinIO Console**: `http://localhost:9090`
-- **Jupyter Notebook**: `http://localhost:8888`
+- **Jupyter Notebook com Delta Lake**: `http://localhost:8888`
 - **n8n**: `http://localhost:5678`
-- **Briefer Cloud**: `http://localhost:3000`
 
 Cada serviço pode ter configurações adicionais no `docker-compose.yml`, que podem ser personalizadas conforme necessário.
+
+## Licença
+
+Este projeto é licenciado sob a **Licença MIT** - veja o arquivo LICENSE para mais detalhes.
+
+## Desenvolvido por
+
+José Marcello Lopes
+
+www.linkedin.com/in/josemarcellolopes
