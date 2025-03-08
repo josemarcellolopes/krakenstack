@@ -2,7 +2,7 @@
 
 ![Tela](images/Kraken_Stack.png)
 
-Este repositório contém o projeto **Kraken Stack**, cria um ambiente baseado em Docker para o desenvolvimento de pipelines de dados.
+O **Kraken Stack** é uma solução para desenvolvimento e gerenciamento de pipelines de dados, baseada em Docker. **Este ambiente integra diversas tecnologias** voltadas para a orquestração, processamento, armazenamento e automação de fluxos de trabalho, permitindo uma infraestrutura flexível e escalável para projetos de ciência de dados, engenharia de dados e análise de informações.
 
 ## Estrutura do Projeto
 
@@ -17,6 +17,49 @@ kraken/
 ├── run.sh             # Script para iniciar a aplicação
 └── stop.sh            # Script para parar a aplicação
 ```
+
+## Tecnologias Utilizadas
+
+O Kraken Stack utiliza as seguintes tecnologias para a execução dos serviços:
+
+- **PostgreSQL** - Banco de dados relacional para Airflow e n8n
+- **Redis** - Backend de mensagens para Airflow
+- **Apache Airflow** - Orquestração de workflows
+- **MySQL** - Banco de dados relacional
+- **Briefer Cloud** - Análise de dados e relatórios
+- **MinIO** - Armazenamento de objetos compatível com S3
+- **Apache Spark** - Processamento distribuído de dados
+- **Jupyter Notebook** - Ambiente interativo para análise de dados
+- **n8n** - Automatização de fluxos de trabalho
+
+## Credenciais Padrão
+
+As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-compose.yml`:
+
+- **PostgreSQL (Airflow)**
+  - Usuário: `airflow`
+  - Senha: `airflow`
+  - Banco de Dados: `airflow`
+
+- **PostgreSQL (n8n)**
+  - Usuário: `n8n`
+  - Senha: `n8npassword`
+
+- **MySQL**
+  - Usuário root: `root`
+  - Senha: `Suc3ss0!`
+
+- **MinIO**
+  - Usuário: `admin`
+  - Senha: `Suc3ss0!`
+
+- **Airflow Webserver**
+  - Usuário: `admin`
+  - Senha: `Suc3ss0!`
+
+- **n8n**
+  - Usuário: `admin`
+  - Senha: `yourpassword`
 
 ## Pré-requisitos
 
@@ -53,3 +96,15 @@ Os notebooks Jupyter podem ser encontrados na pasta `notebooks/`. Certifique-se 
 ## Docker
 
 A pasta `docker/` contém arquivos de configuração para execução do projeto dentro de containers Docker. Certifique-se de que o Docker está instalado e rodando.
+
+## Serviços Disponíveis
+
+O Kraken Stack contém diversos serviços, que podem ser acessados nas seguintes portas padrão:
+
+- **Apache Airflow**: `http://localhost:8080`
+- **MinIO Console**: `http://localhost:9090`
+- **Jupyter Notebook**: `http://localhost:8888`
+- **n8n**: `http://localhost:5678`
+- **Briefer Cloud**: `http://localhost:3000`
+
+Cada serviço pode ter configurações adicionais no `docker-compose.yml`, que podem ser personalizadas conforme necessário.
