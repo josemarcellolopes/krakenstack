@@ -98,6 +98,7 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
 Clone o repositório do GitHub
 
 git clone https://github.com/josemarcellolopes/krakenstack.git
+
 cd kraken
 
 ### Para inicializar a stack
