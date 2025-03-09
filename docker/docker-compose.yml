@@ -140,59 +140,20 @@ services:
     networks:
       - kraken
 
-  storage-minio:
-    image: minio/minio:latest
-    container_name: storage_minio
-    ports:
-      - "9000:9000"
-      - "9090:9090"
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: Suc3ss0!
-    volumes:
-      - minio_data:/data
-    networks:
-      - kraken
-    command: server --console-address ":9090" /data
-
-  spark-master:
-    image: bitnami/spark:latest
-    container_name: spark_master
-    environment:
-      - SPARK_MODE=master
-      - SPARK_MASTER_HOST=spark-master
-    ports:
-      - "7077:7077"
-      - "8081:8080"
-    networks:
-      - kraken
-
-  spark-worker:
-    image: bitnami/spark:latest
-    container_name: spark_worker
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-    depends_on:
-      - spark-master
-    networks:
-      - kraken
-
-  spark-jupyter:
-    image: jupyter/pyspark-notebook
-    container_name: jupyter_notebook
-    environment:
-      - SPARK_MASTER=spark://spark-master:7077
+  delta-lake:
+    image: deltaio/delta-docker:latest
+    container_name: delta_lake
     ports:
       - "8888:8888"
     volumes:
-      - ./notebooks:/home/jovyan/work
-    depends_on:
-      - spark-master
-      - spark-worker
+      - ./notebooks:/home/jovyan/notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=
+    command: ["start-notebook.sh", "--NotebookApp.password=''"]
     networks:
       - kraken
-
+  
   flow-n8n:
     image: n8nio/n8n
     container_name: flow_n8n
@@ -242,5 +203,6 @@ volumes:
   briefer_jupyter:
   briefer_home:
   minio_data:
+  storage_deltalake:
   flow_n8n_data:
   flow_postgres_data:

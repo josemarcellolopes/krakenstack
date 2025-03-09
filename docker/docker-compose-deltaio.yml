@@ -1,0 +1,21 @@
+services:
+  delta-lake:
+    image: deltaio/delta-docker:latest
+    container_name: delta_lake
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=
+    command: ["start-notebook.sh", "--NotebookApp.password=''"]
+    networks:
+      - kraken
+
+networks:
+  kraken:
+    driver: bridge
+
+volumes:
+  storage_deltalake:

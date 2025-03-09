@@ -12,7 +12,7 @@ echo "1) Briefer"
 echo "2) MySQL"
 echo "3) Airflow"
 echo "4) N8n"
-echo "5) Spark com Delta Lake"
+echo "5) Delta Lake"
 echo "6) MinIO (S3)"
 echo "7) Todas Stacks"
 echo ""
@@ -41,9 +41,9 @@ for option in $input; do
                 echo ""
                 docker-compose -f docker/docker-compose-n8n.yml up -d ;;
 
-        5) echo "Iniciando Spark com Delta Lake..."; 
+        5) echo "Iniciando Delta Lake..."; 
                 echo ""
-                docker-compose -f docker/docker-compose-spark.yml up -d ;;
+                docker-compose -f docker/docker-compose-deltaio.yml up -d ;;
 
         6) echo "Iniciando MinIO (S3)..."; 
                 echo ""
@@ -51,7 +51,7 @@ for option in $input; do
 
         7) echo "Iniciando todas as stacks...";
                 echo ""
-                docker-compose -f docker/docker-compose-briefer.yml -f docker/docker-compose-mysql.yml -f docker/docker-compose-airflow.yml -f docker/docker-compose-n8n.yml -f docker/docker-compose-spark.yml -f docker/docker-compose-minio.yml up -d ;;
+                docker-compose -f docker/docker-compose-briefer.yml -f docker/docker-compose-mysql.yml -f docker/docker-compose-airflow.yml -f docker/docker-compose-n8n.yml -f docker/docker-compose-deltaio.yml -f docker/docker-compose-minio.yml up -d ;;
 
         0) echo "Saindo..."; 
                 echo ""

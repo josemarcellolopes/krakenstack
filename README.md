@@ -13,12 +13,11 @@ No contexto do projeto, o Kraken representa uma solução robusta e integrada pa
 ```
 kraken/
 ├── docker/            # Configurações e arquivos relacionados ao Docker
-├── airflow/           # Pasta do Airflow
-    ├── dags/          # Contém as Dags do Airflow
-    ├── logs/          # Contém os logs do Airflow
-    ├── plugins/       # Contém os plugins do Airflow
-├── spark/             # Pasta do Spark
-    ├── notebooks/     # Contém os notebooks
+    ├── airflow/       # Pasta do Airflow
+        ├── dags/      # Contém as Dags do Airflow
+        ├── logs/      # Contém os logs do Airflow
+        ├── plugins/   # Contém os plugins do Airflow
+    ├── notebooks/     # Contém os notebooks gerados no Delta Lake
 ├── images/            # Armazena imagens do projeto
 ├── notebooks/         # Jupyter Notebooks
 ├── menu.sh            # Script de menu interativo
