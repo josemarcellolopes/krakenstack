@@ -1,4 +1,5 @@
-# Kraken Stack v1
+# Kraken Stack 
+#### v1
 
 ![Tela](images/Kraken_Stack.png)
 
@@ -19,7 +20,6 @@ kraken/
         ├── plugins/   # Contém os plugins do Airflow
     ├── notebooks/     # Contém os notebooks gerados no Delta Lake
 ├── images/            # Armazena imagens do projeto
-├── notebooks/         # Jupyter Notebooks
 ├── menu.sh            # Script de menu interativo
 ├── notes.txt          # Anotações e informações do projeto
 ├── README.md          # Documentação do projeto
@@ -39,7 +39,7 @@ O Kraken Stack utiliza as seguintes tecnologias para a execução dos serviços:
 - **Apache Spark** - Processamento distribuído de dados
 - **Jupyter Notebook** - Ambiente interativo para análise de dados
 - **Delta Lake** - Armazenamento com capacidade ACID
-- **MinIO** - Armazenamento de objetos compatível com S3
+- **MinIO (S3)** - Armazenamento de objetos compatível com S3
 - **n8n** - Automatização de fluxos de trabalho
 
 Esta sendo desenvolvido a adição de mais tecnologias, são as seguintes:
@@ -76,7 +76,7 @@ As seguintes credenciais são utilizadas no ambiente configurado pelo `docker-co
   - Usuário root: `root`
   - Senha: `Suc3ss0!`
 
-- **MinIO**
+- **MinIO (S3)**
   - Usuário: `admin`
   - Senha: `Suc3ss0!`
 
@@ -122,7 +122,7 @@ O Kraken Stack contém diversos serviços, que podem ser acessados nas seguintes
 
 - **Briefer Cloud**: `http://localhost:3000`
 - **Apache Airflow**: `http://localhost:8080`
-- **MinIO Console**: `http://localhost:9090`
+- **MinIO (S3) Console**: `http://localhost:9090`
 - **Jupyter Notebook com Delta Lake**: `http://localhost:8888`
 - **n8n**: `http://localhost:5678`
 
