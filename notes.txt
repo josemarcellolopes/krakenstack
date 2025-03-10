@@ -1,7 +1,1 @@
-Postgres
-SQL Server
-Oracle
-DB2
-MongoDB
-Cassandra
-Redis
+Mensagens de warging não causam problemas no funcionamento da stack, as mesmas já estão sendo analisadas e seram removidas.
